@@ -378,7 +378,6 @@ showShiftTimer = 0
 goto modeToggled
 return
 
-;üSetTimer, modeToggled, 1000
 modeToggled:
 if (isShiftPressed && !showingShift && !showShiftTimer){
   SetTimer, showShift, -500
@@ -388,8 +387,8 @@ if (isShiftPressed && !showingShift && !showShiftTimer){
   showShiftTimer = 0
   showingShift = 0
 }
-;SplashTextOn, 150, 20, Button from WinLIRC, Mode Toggled
-;SetTimer, SplashOff, 1000  ; This allows more signals to be processed while displaying the window.
+
+
 if (guiErstellt){
     if ((isMod3Pressed) && (isMod4Pressed || isMod4Locked)){
       goto Switch6
@@ -513,17 +512,6 @@ Show:
     }     
     yPosition := A_ScreenHeight -270
     Gui,Color,FFFFFF
-    ;Gui,Add,Button,xm+5 gSwitch1,F1
-    ;Gui,Add,Button,xm+5 gSwitch2,F2
-    ;Gui,Add,Button,xm+5 gSwitch3,F3
-    ;Gui,Add,Button,xm+5 gSwitch4,F4
-    ;Gui,Add,Button,xm+5 gSwitch5,F5
-    ;Gui,Add,Button,xm+5 gSwitch6,F6
-    ;Gui,Add,Button,xm+5 gShow,F7
-    ;Gui,Add,Text,x+5,An /
-    ;Gui,Add,Text,y+3,Aus
-    ;Gui,Add,Button,x+10 y+-30 gShow,F8
-    ;Gui,Add,Text,x+5,OnTop
     Gui,Add,Picture,  AltSubmit BackgroundTrans xm ym vPicture,%Image% ;
     Gui,+AlwaysOnTop
     Gui +LastFound
