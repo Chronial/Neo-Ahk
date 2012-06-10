@@ -37,9 +37,9 @@ menu,tray,add,Hilfe,:helpmenu
 menu,tray,add
 menu,tray,add,%disable%,togglesuspend
 menu,tray,add
-menu,tray,add,Skript Bearbeiten,edit
-menu,tray,add,Neu Laden,reload
-menu,tray,add,Tastatur toggeln,Show
+menu,tray,add,Skript bearbeiten,edit
+menu,tray,add,Skript neu laden,reload
+menu,tray,add,Bildschirmtastatur umschalten,Show
 menu,tray,add
 menu,tray,add,Nicht im Systray anzeigen,hide
 menu,tray,add,%name% beenden,exitprogram
@@ -363,7 +363,6 @@ exitprogram:
 return
 
 
-
 ;*********************
 ; BildschirmTastatur *
 ;*********************
@@ -379,36 +378,34 @@ goto modeToggled
 return
 
 modeToggled:
-if (isShiftPressed && !showingShift && !showShiftTimer){
-  SetTimer, showShift, -500
-  showShiftTimer = 1
-} else if (!isShiftPressed){
-  SetTimer, showShift, Off
-  showShiftTimer = 0
-  showingShift = 0
-}
-
-
-if (guiErstellt){
-    if ((isMod3Pressed) && (isMod4Pressed || isMod4Locked)){
+  if (isShiftPressed && !showingShift && !showShiftTimer){
+    SetTimer, showShift, -500
+    showShiftTimer = 1
+  } else if (!isShiftPressed){
+    SetTimer, showShift, Off
+    showShiftTimer = 0
+    showingShift = 0
+  }
+  
+  if (guiErstellt) {
+    if ((isMod3Pressed) && (isMod4Pressed || isMod4Locked)) {
       goto Switch6
-    } else if ((isMod3Pressed) && (isShiftPressed || isMod2Locked)){
+    } else if ((isMod3Pressed) && (isShiftPressed || isMod2Locked)) {
       goto Switch5
     } else if (isMod4Active) {
       goto Switch4
     } else if (isMod3Pressed) {
       goto Switch3
-    } else if (showingShift || isMod2Locked){
+    } else if (showingShift || isMod2Locked) {
       goto Switch2
     } else {
       goto Switch1
     }
-}
+  }
 return
 
-
 SplashOff:
-SplashTextOff
+  SplashTextOff
 return
 
 *F1::
@@ -492,7 +489,7 @@ Return
 Switch:
   if guiErstellt {
     if (Image = tImage) {
-       ;goto Close
+      ;goto Close
     } else {
       Image := tImage
       SetTimer, Refresh
