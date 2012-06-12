@@ -23,9 +23,17 @@ keymap = [
 block = """
 *{0}::
 if (isMod4Active and !isMod3Pressed) {{
+    if (key_{0}_down) {{
+        Send {{Blind}}{{{0} up}}
+        key_{0}_down := 0
+    }}
 	Send {{Blind}}{{{1} DownTemp}}
 	key_{0}_down_mod := 1
 }} else {{
+    if (key_{0}_down_mod) {{
+        Send {{Blind}}{{{1} up}}
+        key_{0}_down_mod := 0
+    }}
 	Send {{Blind}}{{{0} DownTemp}}
 	key_{0}_down := 1
 }}

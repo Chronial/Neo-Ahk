@@ -206,9 +206,17 @@ doMod4() {
 
 *z::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_z_down){
+        Send {Blind}{z up}
+        key_z_down := 0
+    }
 	Send {Blind}{Ctrl DownTemp}{z DownTemp}
 	key_z_down_mod := 1
 } else {
+    if (key_z_down_mod){
+        Send {Blind}{Ctrl Up}{z Up}
+        key_z_down_mod := 0
+    }
 	Send {Blind}{z DownTemp}
 	key_z_down := 1
 }
@@ -231,9 +239,17 @@ return
 
 *x::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_x_down) {
+        Send {Blind}{x up}
+        key_x_down := 0
+    }
 	Send {Blind}{PGUP DownTemp}
 	key_x_down_mod := 1
 } else {
+    if (key_x_down_mod) {
+        Send {Blind}{PGUP up}
+        key_x_down_mod := 0
+    }
 	Send {Blind}{x DownTemp}
 	key_x_down := 1
 }
@@ -253,9 +269,17 @@ return
 
 *v::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_v_down) {
+        Send {Blind}{v up}
+        key_v_down := 0
+    }
 	Send {Blind}{BACKSPACE DownTemp}
 	key_v_down_mod := 1
 } else {
+    if (key_v_down_mod) {
+        Send {Blind}{BACKSPACE up}
+        key_v_down_mod := 0
+    }
 	Send {Blind}{v DownTemp}
 	key_v_down := 1
 }
@@ -275,9 +299,17 @@ return
 
 *l::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_l_down) {
+        Send {Blind}{l up}
+        key_l_down := 0
+    }
 	Send {Blind}{UP DownTemp}
 	key_l_down_mod := 1
 } else {
+    if (key_l_down_mod) {
+        Send {Blind}{UP up}
+        key_l_down_mod := 0
+    }
 	Send {Blind}{l DownTemp}
 	key_l_down := 1
 }
@@ -297,9 +329,17 @@ return
 
 *c::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_c_down) {
+        Send {Blind}{c up}
+        key_c_down := 0
+    }
 	Send {Blind}{DEL DownTemp}
 	key_c_down_mod := 1
 } else {
+    if (key_c_down_mod) {
+        Send {Blind}{DEL up}
+        key_c_down_mod := 0
+    }
 	Send {Blind}{c DownTemp}
 	key_c_down := 1
 }
@@ -319,9 +359,17 @@ return
 
 *w::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_w_down) {
+        Send {Blind}{w up}
+        key_w_down := 0
+    }
 	Send {Blind}{PGDN DownTemp}
 	key_w_down_mod := 1
 } else {
+    if (key_w_down_mod) {
+        Send {Blind}{PGDN up}
+        key_w_down_mod := 0
+    }
 	Send {Blind}{w DownTemp}
 	key_w_down := 1
 }
@@ -341,9 +389,17 @@ return
 
 *u::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_u_down) {
+        Send {Blind}{u up}
+        key_u_down := 0
+    }
 	Send {Blind}{HOME DownTemp}
 	key_u_down_mod := 1
 } else {
+    if (key_u_down_mod) {
+        Send {Blind}{HOME up}
+        key_u_down_mod := 0
+    }
 	Send {Blind}{u DownTemp}
 	key_u_down := 1
 }
@@ -363,9 +419,17 @@ return
 
 *i::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_i_down) {
+        Send {Blind}{i up}
+        key_i_down := 0
+    }
 	Send {Blind}{LEFT DownTemp}
 	key_i_down_mod := 1
 } else {
+    if (key_i_down_mod) {
+        Send {Blind}{LEFT up}
+        key_i_down_mod := 0
+    }
 	Send {Blind}{i DownTemp}
 	key_i_down := 1
 }
@@ -385,9 +449,17 @@ return
 
 *a::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_a_down) {
+        Send {Blind}{a up}
+        key_a_down := 0
+    }
 	Send {Blind}{DOWN DownTemp}
 	key_a_down_mod := 1
 } else {
+    if (key_a_down_mod) {
+        Send {Blind}{DOWN up}
+        key_a_down_mod := 0
+    }
 	Send {Blind}{a DownTemp}
 	key_a_down := 1
 }
@@ -407,9 +479,17 @@ return
 
 *e::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_e_down) {
+        Send {Blind}{e up}
+        key_e_down := 0
+    }
 	Send {Blind}{RIGHT DownTemp}
 	key_e_down_mod := 1
 } else {
+    if (key_e_down_mod) {
+        Send {Blind}{RIGHT up}
+        key_e_down_mod := 0
+    }
 	Send {Blind}{e DownTemp}
 	key_e_down := 1
 }
@@ -429,9 +509,17 @@ return
 
 *o::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_o_down) {
+        Send {Blind}{o up}
+        key_o_down := 0
+    }
 	Send {Blind}{END DownTemp}
 	key_o_down_mod := 1
 } else {
+    if (key_o_down_mod) {
+        Send {Blind}{END up}
+        key_o_down_mod := 0
+    }
 	Send {Blind}{o DownTemp}
 	key_o_down := 1
 }
@@ -451,9 +539,17 @@ return
 
 *ü::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_ü_down) {
+        Send {Blind}{ü up}
+        key_ü_down := 0
+    }
 	Send {Blind}{ESC DownTemp}
 	key_ü_down_mod := 1
 } else {
+    if (key_ü_down_mod) {
+        Send {Blind}{ESC up}
+        key_ü_down_mod := 0
+    }
 	Send {Blind}{ü DownTemp}
 	key_ü_down := 1
 }
@@ -473,9 +569,17 @@ return
 
 *ö::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_ö_down) {
+        Send {Blind}{ö up}
+        key_ö_down := 0
+    }
 	Send {Blind}{TAB DownTemp}
 	key_ö_down_mod := 1
 } else {
+    if (key_ö_down_mod) {
+        Send {Blind}{TAB up}
+        key_ö_down_mod := 0
+    }
 	Send {Blind}{ö DownTemp}
 	key_ö_down := 1
 }
@@ -495,9 +599,17 @@ return
 
 *ä::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_ä_down) {
+        Send {Blind}{ä up}
+        key_ä_down := 0
+    }
 	Send {Blind}{INS DownTemp}
 	key_ä_down_mod := 1
 } else {
+    if (key_ä_down_mod) {
+        Send {Blind}{INS up}
+        key_ä_down_mod := 0
+    }
 	Send {Blind}{ä DownTemp}
 	key_ä_down := 1
 }
@@ -517,9 +629,17 @@ return
 
 *p::
 if (isMod4Active and !isMod3Pressed) {
+    if (key_p_down) {
+        Send {Blind}{p up}
+        key_p_down := 0
+    }
 	Send {Blind}{ENTER DownTemp}
 	key_p_down_mod := 1
 } else {
+    if (key_p_down_mod) {
+        Send {Blind}{ENTER up}
+        key_p_down_mod := 0
+    }
 	Send {Blind}{p DownTemp}
 	key_p_down := 1
 }
@@ -535,6 +655,7 @@ if (key_p_down_mod){
     key_p_down_mod := 0
 }
 return
+
 ; *************************************** End of Auto-Generate ***********************************
 
 
