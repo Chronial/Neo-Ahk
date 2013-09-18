@@ -203,181 +203,8 @@ doMod4() {
   }
 }
 
-; *** Funktionstasten ***
 
-*x::
-*x up::
-*v::
-*v up::
-*l::
-*l up::
-*c::
-*c up::
-*w::
-*w up::
-*u::
-*u up::
-*i::
-*i up::
-*a::
-*a up::
-*e::
-*e up::
-*o::
-*o up::
-*ü::
-*ü up::
-*ö::
-*ö up::
-*ä::
-*ä up::
-*p::
-*p up::
-
-goto allstarhook
-return
-
-mapkeys:
-    CMCP4x = pgup
-    CMCP4v = backspace
-    CMCP4l = up
-    CMCP4c = del
-    CMCP4w = pgdn
-
-    CMCP4u = home
-    CMCP4i = left
-    CMCP4a = down
-    CMCP4e = right
-    CMCP4o = end
-
-    CMCP4ü = esc
-    CMCP4ö = tab
-    CMCP4ä = ins
-    CMCP4p = enter
-    
-    AllLayers("NumLock","tab","tab","=","≠","≈","≡") ; NumLock
-    AllLayers("NumpadDiv","NumpadDiv","NumpadDiv","÷","⌀","∣","⁄") ; NumpadDiv
-    AllLayers("NumpadMult","NumpadMult","NumpadMult","⋅","×","⊙","⊗") ; NumpadMult
-    AllLayers("NumpadSub","NumpadSub","NumpadSub","−","∖","⊖","∸") ; NumpadSub
-    AllLayers("NumpadAdd","NumpadAdd","NumpadAdd","±","∓","⊕","∔") ; NumpadAdd
-
-    AllLayers("Numpad7","Numpad7","✔","↕","NumpadHome","≪","⌈") ; Numpad7
-    AllLayers("Numpad8","Numpad8","✘","↑","NumpadUp","∩","⋂") ; Numpad8
-    AllLayers("Numpad9","Numpad9","†","⃗","NumpadPgUp","≫","⌉") ; Numpad9
-    AllLayers("Numpad4","Numpad4","♣","←","NumpadLeft","⊂","⊆") ; Numpad4
-    AllLayers("Numpad5","Numpad5","€",":","LButton","⊶","⊷") ; Numpad5
-    AllLayers("Numpad6","Numpad6","‣","→","NumpadRight","⊃","⊇") ; Numpad6
-    AllLayers("Numpad1","Numpad1","♦","↔","NumpadEnd","≤","⌊") ; Numpad1
-    AllLayers("Numpad2","Numpad2","♥","↓","NumpadDown","∪","⋃") ; Numpad2
-    AllLayers("Numpad3","Numpad3","♠","⇌","NumpadPgDn","≥","⌋") ; Numpad3
-    AllLayers("Numpad0","Numpad0","␣","%","NumpadIns","‰","□") ; Numpad0
-    AllLayers("NumpadDot","NumpadDot",".",",","NumpadDel","′","″") ; NumpadDot
-
-    RemapKey("NumpadIns", "Numpad0")
-    RemapKey("NumpadEnd", "Numpad1")
-    RemapKey("NumpadDown", "Numpad2")
-    RemapKey("NumpadPgDn", "Numpad3")
-    RemapKey("NumpadLeft", "Numpad4")
-    RemapKey("NumpadClear", "Numpad5")
-    RemapKey("NumpadRight", "Numpad6")
-    RemapKey("NumpadHome", "Numpad7")
-    RemapKey("NumpadUp", "Numpad8")
-    RemapKey("NumpadPgUp", "Numpad9")
-    RemapKey("NumpadDel", "NumpadDot")
-return
-
-AllLayers(key, e1, e2, e3, e4, e5, e6){
-    global
-    dnkey := "*" . key
-    upkey := dnkey . " up"
-    Hotkey,% dnkey,allstarhook
-    Hotkey,% upkey,allstarhook
-    CMCP1%key% := e1
-    CMCP2%key% := e2
-    CMCP3%key% := e3
-    CMCP4%key% := e4
-    CMCP5%key% := e5
-    CMCP6%key% := e6
-}
-
-RemapKey(key, target){
-    global
-    dnkey := "*" . key
-    upkey := dnkey . " up"
-    Hotkey,% dnkey,allstarhook
-    Hotkey,% upkey,allstarhook
-    KRM%key% := target
-}
-
-
-allstarhook:
-    AllStar(a_thishotkey)
-return
-
-AllStar(This_HotKey) {
-    global
-    ;MsgBox %CMCP2Numpad4%
-    PhysKey := This_HotKey
-    if (SubStr(PhysKey,1,1) == "*")
-        PhysKey := SubStr(PhysKey,2)
-    if (SubStr(PhysKey,-2) == " up") {
-        PhysKey := SubStr(PhysKey,1,StrLen(PhysKey)-3)
-        IsDown := 0
-    } else
-        IsDown := 1
-    RealEbene := Ebene
-    if (KRM%PhysKey% != ""){
-        PhysKey := KRM%PhysKey%
-        if (isMod3Pressed) {
-            RealEbene := 5
-        } else {
-            RealEbene := 2
-        }
-    }
-
-    Char = CP%RealEbene%%PhysKey%
-    if (IsDown == 1) {
-        ;MsgBox % This_HotKey . " -> " . PhysKey . " -> " . Char . " ---> " . "%CM" . Char . ": " . CM%Char%
-        CharStarDown(PhysKey, Char)
-    } else {
-        CharStarUp(PhysKey)
-    }
-}
-
-CharStarDown(PhysKey, Char) {
-    global
-    if (CM%Char% != "") {
-        tosend := CM%Char%
-    } else {
-        tosend := PhysKey
-    }
-    
-    if (PR%PhysKey% != "" && PR%PhysKey% != tosend){
-        CharOutUp(PR%PhysKey%)
-    }
-    
-    ;MsgBox CM%Char%
-    ;MsgBox %tosend%
-    CharOutDown(tosend)
-    PR%PhysKey% := tosend
-}
-
-CharStarUp(PhysKey) {
-    global
-    if (PR%PhysKey% != "") {
-        tosend := PR%PhysKey%
-        PR%PhysKey% := ""
-        CharOutUp(tosend)
-    }
-}
-
-CharOutDown(char){
-    send % "{blind}{" . char . " DownTemp}"
-}
-
-CharOutUp(char){
-    send % "{blind}{" . char . " Up}"
-}
+; Special Mapping only for z
 
 *z::
 if (isMod4Active and !isMod3Pressed) {
@@ -408,6 +235,171 @@ if (key_z_down){
 }
 return
 
+
+; *** Mappings ***
+
+mapkeys:
+    OneLayer("x", 4, "pgup")
+    OneLayer("v", 4, "backspace")
+    OneLayer("l", 4, "up")
+    OneLayer("c", 4, "del")
+    OneLayer("w", 4, "pgdn")
+
+    OneLayer("u", 4, "home")
+    OneLayer("i", 4, "left")
+    OneLayer("a", 4, "down")
+    OneLayer("e", 4, "right")
+    OneLayer("o", 4, "end")
+
+    OneLayer("ü", 4, "esc")
+    OneLayer("ö", 4, "tab")
+    OneLayer("ä", 4, "ins")
+    OneLayer("p", 4, "enter")
+    
+    AllLayers("NumLock","tab","tab","=","≠","≈","≡") ; NumLock
+    AllLayers("NumpadDiv","NumpadDiv","NumpadDiv","÷","⁄","⌀","⁄") ; NumpadDiv
+    AllLayers("NumpadMult","NumpadMult","NumpadMult","⋅","×","⊙","⊗") ; NumpadMult
+    AllLayers("NumpadSub","NumpadSub","NumpadSub","−","∖","⊖","∸") ; NumpadSub
+    AllLayers("NumpadAdd","NumpadAdd","NumpadAdd","±","∓","⊕","∔") ; NumpadAdd
+
+    AllLayers("Numpad7","Numpad7","✔","↕","NumpadHome","≪","⌈") ; Numpad7
+    AllLayers("Numpad8","Numpad8","✘","↑","NumpadUp","∩","⋂") ; Numpad8
+    AllLayers("Numpad9","Numpad9","†","⃗","NumpadPgUp","≫","⌉") ; Numpad9
+    AllLayers("Numpad4","Numpad4","♣","←","NumpadLeft","⊂","⊆") ; Numpad4
+    AllLayers("Numpad5","Numpad5","€",":","LButton","⊶","⊷") ; Numpad5
+    AllLayers("Numpad6","Numpad6","‣","→","NumpadRight","⊃","⊇") ; Numpad6
+    AllLayers("Numpad1","Numpad1","♦","↔","NumpadEnd","≤","⌊") ; Numpad1
+    AllLayers("Numpad2","Numpad2","♥","↓","NumpadDown","∪","⋃") ; Numpad2
+    AllLayers("Numpad3","Numpad3","♠","⇌","NumpadPgDn","≥","⌋") ; Numpad3
+    AllLayers("Numpad0","Numpad0","␣","%","NumpadIns","‰","□") ; Numpad0
+    AllLayers("NumpadDot","NumpadDot",".",",","NumpadDel","′","″") ; NumpadDot
+
+    RemapKey("NumpadIns", "Numpad0")
+    RemapKey("NumpadEnd", "Numpad1")
+    RemapKey("NumpadDown", "Numpad2")
+    RemapKey("NumpadPgDn", "Numpad3")
+    RemapKey("NumpadLeft", "Numpad4")
+    RemapKey("NumpadClear", "Numpad5")
+    RemapKey("NumpadRight", "Numpad6")
+    RemapKey("NumpadHome", "Numpad7")
+    RemapKey("NumpadUp", "Numpad8")
+    RemapKey("NumpadPgUp", "Numpad9")
+    RemapKey("NumpadDel", "NumpadDot")
+return
+
+
+HookKey(key){
+    dnkey := "*" . key
+    upkey := dnkey . " up"
+    Hotkey,% dnkey,allstarhook
+    Hotkey,% upkey,allstarhook
+}
+
+OneLayer(key, layer, target){
+    global
+    HookKey(key)
+    CMCP%layer%%key% := target
+}
+
+AllLayers(key, e1, e2, e3, e4, e5, e6){
+    global
+    HookKey(key)
+    CMCP1%key% := e1
+    CMCP2%key% := e2
+    CMCP3%key% := e3
+    CMCP4%key% := e4
+    CMCP5%key% := e5
+    CMCP6%key% := e6
+}
+
+RemapKey(key, target){
+    global
+    HookKey(key)
+    KRM%key% := target
+}
+
+modeToggled:
+    if ((isMod3Pressed) && (isMod4Pressed || isMod4Locked)) {
+        Ebene := 6
+    } else if ((isMod3Pressed) && (isShiftPressed || isMod2Locked)) {
+        Ebene := 5
+    } else if (isMod4Active) {
+        Ebene := 4
+    } else if (isMod3Pressed) {
+        Ebene := 3
+    } else if (isShiftPressed || isMod2Locked) {
+        Ebene := 2
+    } else {
+        Ebene := 1
+    }
+    goto guiModeToggled
+return
+
+allstarhook:
+    AllStar(a_thishotkey)
+return
+
+AllStar(This_HotKey) {
+    global
+    PhysKey := This_HotKey
+    if (SubStr(PhysKey,1,1) == "*")
+        PhysKey := SubStr(PhysKey,2)
+    if (SubStr(PhysKey,-2) == " up") {
+        PhysKey := SubStr(PhysKey,1,StrLen(PhysKey)-3)
+        IsDown := 0
+    } else
+        IsDown := 1
+    RealEbene := Ebene
+    if (KRM%PhysKey% != ""){
+        PhysKey := KRM%PhysKey%
+        if (isMod3Pressed) {
+            RealEbene := 5
+        } else {
+            RealEbene := 2
+        }
+    }
+
+    Char = CP%RealEbene%%PhysKey%
+    if (IsDown == 1) {
+        CharStarDown(PhysKey, Char)
+        ;MsgBox % This_HotKey . " -> " . PhysKey . " -> " . Char . " ---> " . "%CM" . Char . ": " . CM%Char%
+    } else {
+        CharStarUp(PhysKey)
+    }
+}
+
+CharStarDown(PhysKey, Char) {
+    global
+    if (CM%Char% != "") {
+        tosend := CM%Char%
+    } else {
+        tosend := PhysKey
+    }
+    
+    if (PR%PhysKey% != "" && PR%PhysKey% != tosend){
+        CharOutUp(PR%PhysKey%)
+    }
+    
+    CharOutDown(tosend)
+    PR%PhysKey% := tosend
+}
+
+CharStarUp(PhysKey) {
+    global
+    if (PR%PhysKey% != "") {
+        tosend := PR%PhysKey%
+        PR%PhysKey% := ""
+        CharOutUp(tosend)
+    }
+}
+
+CharOutDown(char){
+    send % "{blind}{" . char . " DownTemp}"
+}
+
+CharOutUp(char){
+    send % "{blind}{" . char . " Up}"
+}
 
 ;*****************
 ; Menüfunktionen *
@@ -481,21 +473,7 @@ showShiftTimer = 0
 goto modeToggled
 return
 
-modeToggled:
-    if ((isMod3Pressed) && (isMod4Pressed || isMod4Locked)) {
-        Ebene := 6
-    } else if ((isMod3Pressed) && (isShiftPressed || isMod2Locked)) {
-        Ebene := 5
-    } else if (isMod4Active) {
-        Ebene := 4
-    } else if (isMod3Pressed) {
-        Ebene := 3
-    } else if (isShiftPressed || isMod2Locked) {
-        Ebene := 2
-    } else {
-        Ebene := 1
-    }
-
+guiModeToggled:
   if (isShiftPressed && !showingShift && !showShiftTimer){
     SetTimer, showShift, -500
     showShiftTimer = 1
