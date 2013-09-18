@@ -63,6 +63,7 @@ isMod4LPressed := 0
 isMod4Pressed := 0
 isMod4Locked := 0
 isMod4Active := 0
+Ebene := 1
 
 
 goto mapkeys
@@ -232,6 +233,7 @@ doMod4() {
 *ä up::
 *p::
 *p up::
+
 goto allstarhook
 return
 
@@ -252,7 +254,61 @@ mapkeys:
     CMCP4ö = tab
     CMCP4ä = ins
     CMCP4p = enter
+    
+    AllLayers("NumLock","tab","tab","=","≠","≈","≡") ; NumLock
+    AllLayers("NumpadDiv","NumpadDiv","NumpadDiv","÷","⌀","∣","⁄") ; NumpadDiv
+    AllLayers("NumpadMult","NumpadMult","NumpadMult","⋅","×","⊙","⊗") ; NumpadMult
+    AllLayers("NumpadSub","NumpadSub","NumpadSub","−","∖","⊖","∸") ; NumpadSub
+    AllLayers("NumpadAdd","NumpadAdd","NumpadAdd","±","∓","⊕","∔") ; NumpadAdd
+
+    AllLayers("Numpad7","Numpad7","✔","↕","NumpadHome","≪","⌈") ; Numpad7
+    AllLayers("Numpad8","Numpad8","✘","↑","NumpadUp","∩","⋂") ; Numpad8
+    AllLayers("Numpad9","Numpad9","†","⃗","NumpadPgUp","≫","⌉") ; Numpad9
+    AllLayers("Numpad4","Numpad4","♣","←","NumpadLeft","⊂","⊆") ; Numpad4
+    AllLayers("Numpad5","Numpad5","€",":","LButton","⊶","⊷") ; Numpad5
+    AllLayers("Numpad6","Numpad6","‣","→","NumpadRight","⊃","⊇") ; Numpad6
+    AllLayers("Numpad1","Numpad1","♦","↔","NumpadEnd","≤","⌊") ; Numpad1
+    AllLayers("Numpad2","Numpad2","♥","↓","NumpadDown","∪","⋃") ; Numpad2
+    AllLayers("Numpad3","Numpad3","♠","⇌","NumpadPgDn","≥","⌋") ; Numpad3
+    AllLayers("Numpad0","Numpad0","␣","%","NumpadIns","‰","□") ; Numpad0
+    AllLayers("NumpadDot","NumpadDot",".",",","NumpadDel","′","″") ; NumpadDot
+
+    RemapKey("NumpadIns", "Numpad0")
+    RemapKey("NumpadEnd", "Numpad1")
+    RemapKey("NumpadDown", "Numpad2")
+    RemapKey("NumpadPgDn", "Numpad3")
+    RemapKey("NumpadLeft", "Numpad4")
+    RemapKey("NumpadClear", "Numpad5")
+    RemapKey("NumpadRight", "Numpad6")
+    RemapKey("NumpadHome", "Numpad7")
+    RemapKey("NumpadUp", "Numpad8")
+    RemapKey("NumpadPgUp", "Numpad9")
+    RemapKey("NumpadDel", "NumpadDot")
 return
+
+AllLayers(key, e1, e2, e3, e4, e5, e6){
+    global
+    dnkey := "*" . key
+    upkey := dnkey . " up"
+    Hotkey,% dnkey,allstarhook
+    Hotkey,% upkey,allstarhook
+    CMCP1%key% := e1
+    CMCP2%key% := e2
+    CMCP3%key% := e3
+    CMCP4%key% := e4
+    CMCP5%key% := e5
+    CMCP6%key% := e6
+}
+
+RemapKey(key, target){
+    global
+    dnkey := "*" . key
+    upkey := dnkey . " up"
+    Hotkey,% dnkey,allstarhook
+    Hotkey,% upkey,allstarhook
+    KRM%key% := target
+}
+
 
 allstarhook:
     AllStar(a_thishotkey)
@@ -260,6 +316,7 @@ return
 
 AllStar(This_HotKey) {
     global
+    ;MsgBox %CMCP2Numpad4%
     PhysKey := This_HotKey
     if (SubStr(PhysKey,1,1) == "*")
         PhysKey := SubStr(PhysKey,2)
@@ -268,11 +325,23 @@ AllStar(This_HotKey) {
         IsDown := 0
     } else
         IsDown := 1
-    Char = CP%Ebene%%PhysKey%
-    if (IsDown == 1)
+    RealEbene := Ebene
+    if (KRM%PhysKey% != ""){
+        PhysKey := KRM%PhysKey%
+        if (isMod3Pressed) {
+            RealEbene := 5
+        } else {
+            RealEbene := 2
+        }
+    }
+
+    Char = CP%RealEbene%%PhysKey%
+    if (IsDown == 1) {
+        ;MsgBox % This_HotKey . " -> " . PhysKey . " -> " . Char . " ---> " . "%CM" . Char . ": " . CM%Char%
         CharStarDown(PhysKey, Char)
-    else
+    } else {
         CharStarUp(PhysKey)
+    }
 }
 
 CharStarDown(PhysKey, Char) {
