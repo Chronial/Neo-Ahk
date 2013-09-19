@@ -427,6 +427,8 @@ about:
   Näheres finden Sie unter http://neo-layout.org/. 
   `nDieses Skript erweitert den nativen Tastaturtreiber um 
   einige fehlende Funktionen.
+  `nEs beinhaltet außerdem eine Bildschirmtastatur, die mit
+  Shift+Mod4+Tab geöffnet und geschlossen werden kann.
   )
 return
 
@@ -463,153 +465,97 @@ return
 ; BildschirmTastatur *
 ;*********************
 guiErstellt = 0
-alwaysOnTop = 1
 showingShift = 0
 showShiftTimer = 0
 
 showShift:
-showingShift = 1
-showShiftTimer = 0
-goto modeToggled
+    showingShift = 1
+    showShiftTimer = 0
+    goto modeToggled
 return
 
 guiModeToggled:
-  if (isShiftPressed && !showingShift && !showShiftTimer){
-    SetTimer, showShift, -500
-    showShiftTimer = 1
-  } else if (!isShiftPressed){
-    SetTimer, showShift, Off
-    showShiftTimer = 0
-    showingShift = 0
-  }
-  
-  if (guiErstellt) {
-    if ((isMod3Pressed) && (isMod4Pressed || isMod4Locked)) {
-      goto Switch6
-    } else if ((isMod3Pressed) && (isShiftPressed || isMod2Locked)) {
-      goto Switch5
-    } else if (isMod4Active) {
-      goto Switch4
-    } else if (isMod3Pressed) {
-      goto Switch3
-    } else if (showingShift || isMod2Locked) {
-      goto Switch2
-    } else {
-      goto Switch1
+    ; This shift logic delays the display of layer 2,
+    ; so the keyboard doesn’t constantly flash during
+    ; normal typing
+    if (isShiftPressed && !showingShift && !showShiftTimer){
+        SetTimer, showShift, -300
+        showShiftTimer = 1
+    } else if (!isShiftPressed){
+        SetTimer, showShift, Off
+        showShiftTimer = 0
+        showingShift = 0
     }
-  }
-return
-
-SplashOff:
-  SplashTextOff
+  
+    if (guiErstellt) {
+        guiEbene := Ebene
+        if (guiEbene = 2 && !showingShift)
+            guiEbene = 1
+        goto UpdateImage
+    }
 return
 
 *F7::
-  if (isMod4Pressed&&zeigeBildschirmTastatur)
-    goto Show
-  else send {blind}{F7}
+    if (isMod4Pressed && zeigeBildschirmTastatur)
+        goto Show
+    else send {blind}{F7}
 return
 
-*F8::
-  if (isMod4Pressed&&zeigeBildschirmTastatur)
-    goto ToggleAlwaysOnTop
-  else send {blind}{F8}
+*Tab::
+    if (isMod4Pressed && zeigeBildschirmTastatur)
+        goto Show
+    else send {blind}{Tab}
 return
-
-Switch1:
-  tImage := "ebene1.png"
-  goto Switch
-Return
-
-Switch2:
-  tImage := "ebene2.png"
-  goto Switch
-Return
-
-Switch3:
-  tImage := "ebene3.png"
-  goto Switch
-Return
-
-Switch4:
-  tImage := "ebene4.png"
-  goto Switch
-Return
-
-Switch5:
-  tImage := "ebene5.png"
-  goto Switch
-Return
-
-Switch6:
-  tImage := "ebene6.png"
-  goto Switch
-Return
-
-Switch:
-  if guiErstellt {
-    if (Image = tImage) {
-      ;goto Close
-    } else {
-      Image := tImage
-      SetTimer, Refresh
-    }
-  } else {
-    Image := tImage
-    goto Show    
-  }
-Return
 
 Show:
-  if guiErstellt {
-     goto Close
-  } else {
-    if (Image = "") {
-      Image := "ebene1.png"
-    }     
-    yPosition := A_ScreenHeight -270
-    Gui,Color,FFFFFF
-    Gui,Add,Picture,  AltSubmit BackgroundTrans xm ym vPicture,%Image% ;
-    Gui,+AlwaysOnTop
-    Gui +LastFound
-    WinSet, TransColor, FFFFFF
-    Gui -Caption +ToolWindow 
-    Gui,Show,NA y%yposition% Autosize
-    OnMessage(0x201, "WM_LBUTTONDOWN")
-    OnMessage(0x203, "WM_LBUTTONDBLCLK")
-    guiErstellt = 1
-  } 
+    if guiErstellt {
+        goto Close
+    } else {
+        if (Image = "") {
+            Image := "ebene1.png"
+        }
+        yPosition := A_ScreenHeight -270
+        Gui,Color,FFFFFF
+        Gui,Add,Picture,  AltSubmit BackgroundTrans xm ym hwndHPIC vPicture,%Image% ;
+        Gui,+AlwaysOnTop
+        Gui +LastFound
+        WinSet, TransColor, FFFFFF
+        Gui -Caption +ToolWindow
+        Gui,Show,NA y%yposition% Autosize
+        OnMessage(0x201, "WM_LBUTTONDOWN")
+        OnMessage(0x203, "WM_LBUTTONDBLCLK")
+        GuiControlGet, P, Pos, Picture
+        loop, 6 {
+            HBITMAP%A_Index% := LoadImage("ebene" . A_Index . ".png", PW, PH)
+        }
+        guiErstellt = 1
+    }
 Return
 
-WM_LBUTTONDOWN()
-{
-   PostMessage, 0xA1, 2
+LoadImage(ImagePath, W, H) {
+    ; Each GUI window may have up to 11,000 controls. However, use caution when creating more
+    ; than 5000 controls because system instability may occur for certain control types.
+    Gui, 99:Add, Pic, w%W% h%H% AltSubmit hwndHPIC, %ImagePath%
+    SendMessage, 0x0173, 0, 0, , ahk_id %HPIC% ; STM_GETIMAGE
+    Return ErrorLevel
 }
 
-WM_LBUTTONDBLCLK()
-{
-   SetTimer, Close, -1
+UpdateImage:
+    if (guiEbeneShown != guiEbene){
+        SendMessage, 0x0172, 0, HBITMAP%guiEbene%, , ahk_id %HPIC% ; STM_SETIMAGE
+        guiEbeneShown := guiEbene
+    }
+Return
+
+WM_LBUTTONDOWN() {
+    PostMessage, 0xA1, 2
+}
+
+WM_LBUTTONDBLCLK() {
+    SetTimer, Close, -1
 }
 
 Close:
-  guiErstellt = 0
-  Gui,Destroy
+    guiErstellt = 0
+    Gui,Destroy
 Return
-
-Refresh:
-  If (Image != OldImage) {
-    GuiControl,,Picture,%Image%
-    OldImage := Image
-  }
-Return
-
-ToggleAlwaysOnTop:
-  if alwaysOnTop {
-    Gui, -AlwaysOnTop
-    alwaysOnTop = 0    
-  } else {
-    Gui, +AlwaysOnTop
-    alwaysOnTop = 1
-  }
-Return
-
