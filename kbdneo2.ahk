@@ -543,9 +543,14 @@ LoadImage(ImagePath, W, H) {
 UpdateImage:
     if (guiEbeneShown != guiEbene){
         SendMessage, 0x0172, 0, HBITMAP%guiEbene%, , ahk_id %HPIC% ; STM_SETIMAGE
+        DeleteObject(ErrorLevel)
         guiEbeneShown := guiEbene
     }
 Return
+
+DeleteObject(hObject) {
+   return DllCall("DeleteObject", "uint", hObject)
+}
 
 WM_LBUTTONDOWN() {
     PostMessage, 0xA1, 2
@@ -558,4 +563,5 @@ WM_LBUTTONDBLCLK() {
 Close:
     guiErstellt = 0
     Gui,Destroy
+    Gui, 99:Destroy
 Return
