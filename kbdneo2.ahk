@@ -501,12 +501,6 @@ return
     else send {blind}{F7}
 return
 
-*Tab::
-    if (isMod4Pressed && zeigeBildschirmTastatur)
-        goto Show
-    else send {blind}{Tab}
-return
-
 Show:
     if guiErstellt {
         goto Close
